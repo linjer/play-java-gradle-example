@@ -25,6 +25,25 @@ model {
         play {
             platform play: '2.5.8', scala: '2.11'
             injectedRoutesGenerator = true
+            
+            binaries.all {
+                // this is required so that not fully qualified class names in the twirl templates look for in the default Java imports, and not in the default Scala ones
+                // for instance, this ensures that with List one refers to java.util.List and not scala.collections.immutable.List
+                tasks.withType(TwirlCompile) {
+                    defaultImports = "JAVA" // value has to be either JAVA or SCALA. 
+                }
+                
+                // this is required if one uses JavaScript using ECMASCRIPT 6 because the minify task cannot be easily disabled
+                tasks.withType(JavaScriptMinify) {
+                    exclude "*/es6/*" // excludes all files within the es6 folder
+                }
+                
+                // typically, a different configuration is used for the tests than for production/development
+                // One could create a copy of the application.conf, e.g., a test.conf, and pass it instead of the application.conf for the tests.
+                tasks.withType(Test) {
+                    systemProperty "config.resource", "application.conf"
+                }
+            }
         }
     }
 }

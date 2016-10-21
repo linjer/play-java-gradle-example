@@ -138,13 +138,12 @@ model {
             platform play: '2.5.8', scala: '2.11', java: '1.8'
             injectedRoutesGenerator = true
             
-            binaries.all {
-                // this is required so that not fully qualified class names in the twirl templates look for in the default Java imports, and not in the default Scala ones
-                // for instance, this ensures that with List one refers to java.util.List and not scala.collections.immutable.List
-                // WARNING somehow this does not work with the current example... investigation required
-                //tasks.withType(TwirlCompile) {
-                //    defaultImports = "JAVA" // value has to be either JAVA or SCALA. 
-                //}
+            // this is required so that not fully qualified class names in the twirl templates look for in the default Java imports, and not in the default Scala ones
+            // for instance, this ensures that with List one refers to java.util.List and not scala.collections.immutable.List
+            sources {
+                twirlTemplates {
+                    defaultImports = TwirlImports.JAVA
+                }
             }
         }
     }

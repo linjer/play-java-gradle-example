@@ -2,6 +2,7 @@ plugins {
     id 'play'
     id 'idea'
 
+    id 'nebula.lint' version '8.3.1'
     // compiles any app/*.less file to css
     // Documentation: https://github.com/jvff/play-less-gradle-plugin
     // UNCOMMENT NEXT LINE IF LESS COMPILATION IS REQUIRED
@@ -11,7 +12,7 @@ plugins {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+    gradleVersion = '4.3.1'
 }
 
 repositories {
@@ -147,4 +148,14 @@ model {
             }
         }
     }
+}
+
+gradleLint {
+    rules = ['all-dependency']
+    criticalRules = ['unused-dependency']
+    alwaysRun = true
+}
+
+dependencies {
+    play group: 'com.google.guava', name: 'guava', version: '23.4-jre'
 }
